@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Selamat Ulang Tahun Jissa Rasa Rosso</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #8e2de2, #4a00e0);
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 30px 20px;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.2em;
+      text-shadow: 0 0 10px #fff;
+    }
+    p {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
+      text-shadow: 0 0 6px rgba(0,0,0,0.3);
+    }
+    #photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+      gap: 15px;
+      max-width: 900px;
+      margin: 0 auto 40px auto;
+    }
+    #photo-gallery img {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    #photo-gallery img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(255,255,255,0.7);
+    }
+    audio {
+      outline: none;
+      margin-bottom: 40px;
+      filter: drop-shadow(0 0 3px #fff);
+    }
+    footer {
+      font-style: italic;
+      color: #ddd;
+      font-size: 1rem;
+    }
+    /* Confetti canvas overlay */
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Selamat Ulang Tahun untuk Anda, Jissa Rasa Rosso!</h1>
+  <p>Semoga di umur yang ke-22 ini, Anda menjadi pribadi yang kuat dan hebat serta dimurahkan rezekinya. Jangan lupa ngopi ☕</p>
+
+  <div id="photo-gallery">
+    <img src="photos/photo1.jpg" alt="Foto 1" />
+    <img src="photos/photo2.jpg" alt="Foto 2" />
+    <img src="photos/photo3.jpg" alt="Foto 3" />
+    <img src="photos/photo4.jpg" alt="Foto 4" />
+    <img src="photos/photo5.jpg" alt="Foto 5" />
+    <img src="photos/photo6.jpg" alt="Foto 6" />
+    <img src="photos/photo7.jpg" alt="Foto 7" />
+    <img src="photos/photo8.jpg" alt="Foto 8" />
+    <img src="photos/photo9.jpg" alt="Foto 9" />
+    <img src="photos/photo10.jpg" alt="Foto 10" />
+    <img src="photos/photo11.jpg" alt="Foto 11" />
+    <img src="photos/photo12.jpg" alt="Foto 12" />
+  </div>
+
+  <audio controls autoplay loop>
+    <source src="music/happy-birthday.mp3" type="audio/mpeg" />
+    Browser Anda tidak mendukung pemutar audio.
+  </audio>
+
+  <footer>
+    Dibuat untuk anda Jissa Rasa Rosso
+  </footer>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+    // Simple confetti script adapted from canvas-confetti style
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+    function resize() {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W;
+      canvas.height = H;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const confettiCount = 150;
+    const confetti = [];
+
+    function randomRange(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    class Confetto {
+      constructor() {
+        this.x = randomRange(0, W);
+        this.y = randomRange(-H, 0);
+        this.size = randomRange(7, 12);
+        this.speedY = randomRange(1, 3);
+        this.speedX = randomRange(-1, 1);
+        this.angle = randomRange(0, 360);
+        this.rotationSpeed = randomRange(5, 10);
+        this.color = `hsl(${Math.floor(randomRange(0, 360))}, 70%, 60%)`;
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.angle += this.rotationSpeed;
+        if (this.y > H) {
+          this.y = randomRange(-20, 0);
+          this.x = randomRange(0, W);
+        }
+        if (this.x > W) this.x = 0;
+        if (this.x < 0) this.x = W;
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle * Math.PI / 180);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size/2);
+        ctx.restore();
+      }
+    }
+
+    for(let i=0; i<confettiCount; i++) {
+      confetti.push(new Confetto());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, W, H);
+      confetti.forEach(c => {
+        c.update();
+        c.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+
+</body>
+</html>
